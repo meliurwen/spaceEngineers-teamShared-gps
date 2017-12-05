@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+#icon {
+  margin: 0px;
+  padding: 0px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+th {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #cce6ff}
+tr:hover {background-color: #80c1ff}
+
+th {
+    background-color: #3399ff;
+    color: white;
+}
+
+td a {display: block;
+  text-decoration: none;
+  color: black;
+  text-align: left;
+  padding: 8px;
+}
+
+
+</style>
+</head>
+<body>
+
+<div id="icon">
+	<p>Mario<br />Disconnnetti</p>
+</div>
+
+<h1 style="margin:0">Server Polacco [EU] <span style="color:chartreuse">●</span></h1>
+192.168.0.1:25346 - 12/16 - Online<br />
+
+<div style="float: right;"><a href="#">Modifica</a></div>
+<br />
+
+
+<details>
+	<summary>Info</summary>
+	<p>
+		<b>mtod</b><br />
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br />
+		<br />
+		<b>oreinfo</b><br />
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	</p>
+</details>
+
+<br />
+
+<form action="coordinate.php" method="post">
+  <table>
+  <td>
+  <tr>
+  <input type="text" name="coordinate" placeholder="Coordinate">
+  </tr>
+  <tr>
+  <select name="utente">
+    <option value="0">Anonimo</option>
+    <option value="1">Mario</option>
+    <option value="2">Dario</option>
+    <option value="3">Alessio</option>
+    <option value="3">Francesco</option>
+  </select>
+  </tr>
+  <tr>
+  <select name="categoria">
+    <option value="0">Roba importante</option>
+    <option value="1">Marte</option>
+    <option value="2">Terra</option>
+    <option value="3">Asteroidi vicini alla Terra</option>
+  </select>
+  </tr>
+  <tr>
+  <input type="submit" value="Aggiungi">
+  </tr>
+  </table>
+</form>
+
+
+<br />
+
+
+
+<form action="script.php" method="post">
+
+<span style="float: right"><input type="button" value="Elimina" id="delButton" /></span>
+
+
+<table>
+  <tr>
+    <th></th>
+    <th>Nome</th>
+    <th>Aggiunte da</th>
+    <th>Categoria</th>
+    <th>Raw</th>
+  </tr>
+  <tr>
+    <td><input type="checkbox" value="platino" /></td>
+    <td><a href="#" onclick="copyToClipboard('r1')">Platino</a></td>
+    <td><a href="#" onclick="copyToClipboard('r1')">Mario</a></td>
+    <td><a href="#" onclick="copyToClipboard('r1')">Roba importante</a></td>
+    <td><a id="r1" href="#">GPS:Asteroide - Platino:-5597.93:-52573.93:59182.85:</a></td>
+  </tr>
+  <tr>
+    <td><input type="checkbox" value="ferro" /></td>
+    <td><a href="#" onclick="copyToClipboard('r2')">Ferro</a></td>
+    <td><a href="#" onclick="copyToClipboard('r2')">Dario</a></td>
+    <td><a href="#" onclick="copyToClipboard('r2')">Marte</a></td>
+    <td><a id="r2" href="#">RAW</a></td>
+  </tr>
+  <tr>
+    <td><input type="checkbox" value="oro" /></td>
+    <td><a href="#" onclick="copyToClipboard('r3')">Oro</a></td>
+    <td><a href="#" onclick="copyToClipboard('r3')">Francesco</a></td>
+    <td><a href="#" onclick="copyToClipboard('r3')">Marte</a></td>
+    <td><a id="r3" href="#">RAW</a></td>
+  </tr>
+  <tr>
+    <td><input type="checkbox" value="base_nemica" /></td>
+    <td><a href="#" onclick="copyToClipboard('r4')">Base nemica</a></td>
+    <td><a href="#" onclick="copyToClipboard('r4')">Mario</a></td>
+    <td><a href="#" onclick="copyToClipboard('r4')">Asteroidi</a></td>
+    <td><a id="r4" href="#">RAW</a></td>
+</tr>
+</table>
+
+</form>
+
+<a id="text_element" href="#" onclick="copyToClipboard('text_element')">Cleveland</a>
+<br/><br/><input type="text" placeholder="Paste here for checking" />
+
+<br />
+
+
+
+
+
+</body>
+
+
+<SCRIPT>
+
+//Thx internet! <3
+function copyToClipboard(elementId) {
+
+  // Create an auxiliary hidden input
+  var aux = document.createElement("input");
+
+  // Get the text from the element passed into the input
+  aux.setAttribute("value", document.getElementById(elementId).innerHTML);
+
+  // Append the aux input to the body
+  document.body.appendChild(aux);
+
+  // Highlight the content
+  aux.select();
+
+  // Execute the copy command
+  document.execCommand("copy");
+
+  // Remove the input from the body
+  document.body.removeChild(aux);
+
+
+}
+
+function log(){
+	console.log('---')
+}
+
+
+
+
+// Ritorna un array con i valori dei checkbox selezionati
+function getSelectedChbox(elementi) {
+  var array = [];        // Array che conterrà i valori dei checkbox selezionati
+
+  // ottiene tutti i tag "input" ed il loro numero
+  var inpfields = elementi.getElementsByTagName('input');
+  var nr_inpfields = inpfields.length;
+
+  for(var i=0; i<nr_inpfields; i++) {
+    //solo i tag "input" che sono checkbox e sono selezionati
+    if(inpfields[i].type == 'checkbox' && inpfields[i].checked == true){
+	array.push(inpfields[i].value);
+    }
+  }
+
+  return {"operation":"delete", "items":array};
+}
+
+
+// Quando si clicca sul pulsante con tag #delButton, viene lanciato un alert con i valori selezionati nelle checkbox
+document.getElementById('delButton').onclick = function(){
+  var selchb = getSelectedChbox(this.form);
+  alert(JSON.stringify(selchb));
+}
+
+
+</SCRIPT>
+
+</html>

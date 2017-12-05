@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+#icon {
+  margin: 0px;
+  padding: 0px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+th {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #cce6ff}
+tr:hover {background-color: #80c1ff}
+
+th {
+    background-color: #3399ff;
+    color: white;
+}
+
+td a {display: block;
+  text-decoration: none;
+  color: black;
+  text-align: left;
+  padding: 8px;
+}
+
+
+</style>
+</head>
+<body>
+
+<div id="icon">
+	<p>Mario<br />Disconnnetti</p>
+</div>
+
+<h1 style="margin:0">Space Engineers <span style="color:chartreuse">●</span></h1>
+Lista server<br />
+
+<div style="float: right;"><a href="#">Modifica</a></div>
+<br />
+
+
+<details>
+	<summary>Info</summary>
+	<p>
+		<b>Info globali</b><br />
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br />
+		<br />
+		<b>oreinfo</b><br />
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	</p>
+</details>
+
+<br />
+
+<form action="serverSpace.php" method="post">
+  <table>
+  <td>
+  <tr>
+  <input type="text" name="ipaddress" placeholder="indirizzo IP">
+  </tr>
+  <tr>
+  <input type="text" name="port" placeholder="porta">
+  </tr>
+  <tr>
+  <select name="gioco">
+    <option value="0">Space Engineers</option>
+    <option value="1">CSGO</option>
+    <option value="2">The Ship</option>
+  </select>
+  </tr>
+  <tr>
+  <input type="submit" value="Aggiungi">
+  </tr>
+  </table>
+</form>
+
+
+<br />
+
+
+
+<form action="script.php" method="post">
+
+<span style="float: left">Last check 3min ago, next in 7min.</span>
+<span style="float: right"><input type="button" value="Elimina" id="delButton" /></span>
+
+<table>
+  <tr>
+    <th></th>
+    <th>Nome</th>
+    <th>Giocatori</th>
+    <th>Ping</th>
+    <th>IP:porta</th>
+  </tr>
+  <tr>
+    <td><input type="checkbox" value="polacco_eu" /></td>
+    <td><a href="#" onclick="copyToClipboard('r1')">Server Polacco [EU]</a></td>
+    <td><a href="#" onclick="copyToClipboard('r1')">13/16</a></td>
+    <td><a href="#" onclick="copyToClipboard('r1')">15ms</a></td>
+    <td><a id="r1" href="#">192.168.0.1:45362</a></td>
+  </tr>
+  <tr>
+    <td><input type="checkbox" value="polacco_global" /></td>
+    <td><a href="#" onclick="copyToClipboard('r2')">Server Polacco [GLOBAL]</a></td>
+    <td><a href="#" onclick="copyToClipboard('r2')">2/16</a></td>
+    <td><a href="#" onclick="copyToClipboard('r2')">12ms</a></td>
+    <td><a id="r2" href="#">192.168.0.2:45362</a></td>
+  </tr>
+  <tr>
+    <td><input type="checkbox" value="harambe" /></td>
+    <td><a href="#" onclick="copyToClipboard('r3')">Harambe</a></td>
+    <td><a href="#" onclick="copyToClipboard('r3')">N/A</a></td>
+    <td><a href="#" onclick="copyToClipboard('r3')">Offline</a></td>
+    <td><a id="r3" href="#">192.168.0.15:45362</a></td>
+  </tr>
+</table>
+
+</form>
+
+<a id="text_element" href="#" onclick="copyToClipboard('text_element')">Cleveland</a>
+<br/><br/><input type="text" placeholder="Paste here for checking" />
+
+<br />
+
+
+
+
+
+</body>
+
+
+<SCRIPT>
+
+//Thx internet! <3
+function copyToClipboard(elementId) {
+
+  // Create an auxiliary hidden input
+  var aux = document.createElement("input");
+
+  // Get the text from the element passed into the input
+  aux.setAttribute("value", document.getElementById(elementId).innerHTML);
+
+  // Append the aux input to the body
+  document.body.appendChild(aux);
+
+  // Highlight the content
+  aux.select();
+
+  // Execute the copy command
+  document.execCommand("copy");
+
+  // Remove the input from the body
+  document.body.removeChild(aux);
+
+
+}
+
+function log(){
+	console.log('---')
+}
+
+
+
+
+// Ritorna un array con i valori dei checkbox selezionati
+function getSelectedChbox(elementi) {
+  var array = [];        // Array che conterrà i valori dei checkbox selezionati
+
+  // ottiene tutti i tag "input" ed il loro numero
+  var inpfields = elementi.getElementsByTagName('input');
+  var nr_inpfields = inpfields.length;
+
+  for(var i=0; i<nr_inpfields; i++) {
+    //solo i tag "input" che sono checkbox e sono selezionati
+    if(inpfields[i].type == 'checkbox' && inpfields[i].checked == true){
+	array.push(inpfields[i].value);
+    }
+  }
+
+  return {"operation":"delete", "items":array};
+}
+
+
+// Quando si clicca sul pulsante con tag #delButton, viene lanciato un alert con i valori selezionati nelle checkbox
+document.getElementById('delButton').onclick = function(){
+  var selchb = getSelectedChbox(this.form);
+  alert(JSON.stringify(selchb));
+}
+
+
+</SCRIPT>
+
+</html>
