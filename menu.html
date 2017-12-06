@@ -69,17 +69,11 @@ Lista server<br />
 
 <form action="#" method="post" id="form_id">
 
-  <input id="name_form" type="text" name="name" placeholder="nome">
-
-  <input id="ipaddress_form" type="text" name="ipaddress" placeholder="indirizzo IP">
+  <input id="address_form" type="text" name="address" placeholder="indirizzo IP o DNS">
 
   <input id="port_form" type="text" name="port" placeholder="porta">
 
-  <select id="gioco_form" name="game">
-    <option value="0">Space Engineers</option>
-    <option value="1">CSGO</option>
-    <option value="2">The Ship</option>
-  </select>
+  <input id="name_form" type="text" name="name" placeholder="nome">
 
   <input id="description_form" type="text" name="description" placeholder="descrizione">
 
@@ -141,7 +135,7 @@ function robbeh(){
 
 //Thx to http://youmightnotneedjquery.com/
 var request = new XMLHttpRequest();
-request.open('GET', 'test.php?what=serverList', true);
+request.open('GET', 'test.php?operation=get_serverList', true);
 
 request.onload = function() {
   if (request.status >= 200 && request.status < 400) {
@@ -155,7 +149,7 @@ var username = document.getElementById('username');
 
 username.innerHTML = data["user"]["name"] + "<br />Disconnnetti"
 
-var tobj = data["team"][0]["servers"];
+var tobj = data["items"]["servers_list"];
 
 
 var globalCounter = 0;
@@ -172,7 +166,7 @@ var tbody = "<tbody>";
 for (var i = 0; i < Object.keys(tobj).length; i++) {
     var tr = "<tr>";
 
-    tr += '<td><input type="checkbox" value="' + tobj[i].id + '" /></td><td><a href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].name + '</a></td>' + '<td><a href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].players.toString() + '/' + tobj[i].maxPlayers.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].ping.toString() + 'ms</a></td><td><a id="r'+i+'" href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].address.toString() + '</a></td></tr>';
+    tr += '<td><input type="checkbox" value="' + tobj[i].server_id + '" /></td><td><a href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].name + '</a></td>' + '<td><a href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].players.toString() + '/' + tobj[i].maxPlayers.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].ping.toString() + 'ms</a></td><td><a id="r'+i+'" href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].address.toString() + ":" + tobj[i].port.toString() + '</a></td></tr>';
     tbody += tr;
 }
 
@@ -220,8 +214,27 @@ request.send();
 function submit_by_id() {
 
 
-var data = {'name': document.getElementById("name_form").value, 'ipaddress': document.getElementById("ipaddress_form").value, 'port': document.getElementById("port_form").value, 'game': document.getElementById("gioco_form").value, 'description': document.getElementById("description_form").value}
+var data = {'operation': 'add_server',
+		'address': document.getElementById("address_form").value,
+		'port': document.getElementById("port_form").value,
+		'name': document.getElementById("name_form").value,
+		'description': document.getElementById("description_form").value}
 var params = encodeQueryData(data);
+
+
+
+sendPOST(params);
+
+
+
+}
+
+
+
+
+
+
+function sendPOST(params){
 
 
 var http = new XMLHttpRequest();
@@ -241,46 +254,25 @@ http.send(params);
 
 
 
+}
+
 
 
 function encodeQueryData(data) {
    let ret = [];
    for (let d in data)
+if(Array.isArray(data[d])){
+
+data[d].forEach(function(element, indice) {
+    ret.push(encodeURIComponent(d) + '[]=' + encodeURIComponent(element));
+});
+
+}else{
      ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+}
+console.log(ret.join('&'))
    return ret.join('&');
 }
-
-
-
-
-
-//if (validation()) // Calling validation function
-//{
-//document.getElementById("form_id").submit(); //form submission
-//alert(" Name : " + name + " \n Email : " + email + " \n Form Id : " + document.getElementById("form_id").getAttribute("id") + "\n\n Form Submitted Successfully......");
-}
-//}
-
-
-
-
-
-// Name and Email validation Function.
-function validation() {
-var name = document.getElementById("name").value;
-var email = document.getElementById("email").value;
-var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-if (name === '' || email === '') {
-alert("Please fill all fields...!!!!!!");
-return false;
-} else if (!(email).match(emailReg)) {
-alert("Invalid Email...!!!!!!");
-return false;
-} else {
-return true;
-}
-}
-
 
 
 
@@ -346,14 +338,24 @@ function getSelectedChbox(elementi) {
     }
   }
 
-  return {"operation":"delete", "items":array};
+  return {"operation":"del_server", "server_id":array};
 }
 
 
 // Quando si clicca sul pulsante con tag #delButton, viene lanciato un alert con i valori selezionati nelle checkbox
 document.getElementById('delButton').onclick = function(){
-  var selchb = getSelectedChbox(this.form);
-  alert(JSON.stringify(selchb));
+  var data = getSelectedChbox(this.form);
+
+
+var params = encodeQueryData(data);
+
+
+
+sendPOST(params);
+
+
+
+  alert(JSON.stringify(data));
 }
 
 

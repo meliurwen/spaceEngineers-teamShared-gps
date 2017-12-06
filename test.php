@@ -5,25 +5,9 @@
 	error_reporting(E_ALL);
 
 
-	$filename = "spaceEngineers.sqlite3";
+	$filename = "test.sqlite3";
 	$database = $filename;
 	$tabella = "coordinate";
-
-
-
-
-if(isset($_GET["what"])){
-
-$what = $_GET["what"];
-
-if($what == "serverList"){
-
-
-
-
-
-
-
 
 
 
@@ -43,9 +27,21 @@ if($what == "serverList"){
 
 	$db = new MyDB($filename);
 	if(!$db){
-		echo '{"status":"error", "cause":"impossible to open the database"}';
+		echo '{"status":"error", "message":"impossible to open the database"}';
 	}
 
+
+
+
+
+
+
+
+if(isset($_GET["operation"])){
+
+$operation = $_GET["operation"];
+
+if($operation == "get_serverList"){
 
 
 
@@ -56,16 +52,12 @@ $data["status"] = "ok";
 $data["user"] = [];
 $data["user"]["id"] = 1;
 $data["user"]["name"] = "Mario";
-$data["team"] = [];
-
-
-
-$data["team"][] = array("name" => "Team Rocket", "servers" => []);
-
+$data["items"] = [];
+$data["items"]["servers_list"] = [];
 
 
 while($row = $ret->fetchArray(SQLITE3_ASSOC) ){
-	$data["team"][0]["servers"][] =  array("id" => $row["id"], "name" => $row["server"], "address" => $row["indirizzo"], "ping" => 15, "maxPlayers" => 16, "players" => 9, "description" => $row["descrizione"], "owner" => "Rebel Gamers", "timestamp" => $row["timestamp"]);
+	$data["items"]["servers_list"][] =  array("server_id" => $row["server_id"], "address" => $row["address"], "port" => $row["port"], "name" => $row["name"], "description" => $row["description"], "timestamp" => $row["timestamp"], "ping" => 15, "maxPlayers" => 16, "players" => 9);
 }
 
 
@@ -73,17 +65,6 @@ while($row = $ret->fetchArray(SQLITE3_ASSOC) ){
 #$data["team"]["servers"] = array_values();
 
 echo json_encode($data);
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -103,39 +84,65 @@ echo "RIP";
 
 
 
-	//Connessione al database
-	class MyDB extends SQLite3
-	{
-		function __construct($filename)
-		{
-			$this->open($filename);
-		}
-	}
-
-	$db = new MyDB($filename);
-	if(!$db){
-		echo '{"status":"error", "cause":"impossible to open the database"}';
-	}
 
 
 
-echo "AAA";
+
 if (($_SERVER['REQUEST_METHOD'] === 'POST')) {
 
 
-	$name = SQLite3::escapeString($_POST['name']);
-	$ipaddress = SQLite3::escapeString($_POST['ipaddress']);
+$operation = $_POST['operation'];
+
+if($operation === "add_server"){
+
+
+
+
+
+	$address = SQLite3::escapeString($_POST['address']);
 	$port = SQLite3::escapeString($_POST['port']);
+	$name = SQLite3::escapeString($_POST['name']);
 	$description = SQLite3::escapeString($_POST['description']);
-	$game = SQLite3::escapeString($_POST['game']);
+	$timestamp = time();
 
-echo "BBB";
 
-if(isset($name, $ipaddress, $port, $description, $game)){
-	$indirizzo = $ipaddress . ":" . $port;
-	$ret = $db->query("INSERT INTO servers (server, indirizzo, descrizione) VALUES('" . $name . "', '" . $indirizzo . "', '" . $description . "');");
-echo "oi";
+
+if(isset($address, $port, $name, $description)){
+	$ret = $db->query("INSERT INTO servers (address, port, name, description, timestamp) VALUES('" . $address . "', " . $port . ", '" . $name . "', '" . $description . "', " . $timestamp . ");");
+
+	echo '{"status":"ok", "message":"Server (maybe) added!"}';
+
 }
+
+
+
+} elseif($operation === "del_server"){
+
+	if(isset($_POST['server_id'])){
+		if(is_array($_POST['server_id'])){
+			$server_id = $_POST['server_id'];
+		}
+		else{
+			$server_id = [];
+		}
+	} else{
+		$server_id = [];
+	}
+
+foreach ($server_id as &$value) {
+if(ctype_digit($value)){
+	$ret = $db->query("DELETE FROM servers WHERE server_id = " . $value . ";");
+}
+}
+echo '{"status":"ok", "message":"All selected servers has been deleted"}';
+
+
+}
+
+
+
+
+
 }
 
 
