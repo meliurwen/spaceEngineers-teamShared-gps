@@ -44,7 +44,7 @@ td a {display: block;
 <body>
 
 <div id="icon">
-	<p>Mario<br />Disconnnetti</p>
+	<p id="username"></p>
 </div>
 
 <h1 style="margin:0">Space Engineers <span style="color:chartreuse">●</span></h1>
@@ -67,26 +67,24 @@ Lista server<br />
 
 <br />
 
-<form action="serverSpace.php" method="post">
-  <table>
-  <td>
-  <tr>
-  <input type="text" name="ipaddress" placeholder="indirizzo IP">
-  </tr>
-  <tr>
-  <input type="text" name="port" placeholder="porta">
-  </tr>
-  <tr>
-  <select name="gioco">
+<form action="#" method="post" id="form_id">
+
+  <input id="name_form" type="text" name="name" placeholder="nome">
+
+  <input id="ipaddress_form" type="text" name="ipaddress" placeholder="indirizzo IP">
+
+  <input id="port_form" type="text" name="port" placeholder="porta">
+
+  <select id="gioco_form" name="game">
     <option value="0">Space Engineers</option>
     <option value="1">CSGO</option>
     <option value="2">The Ship</option>
   </select>
-  </tr>
-  <tr>
-  <input type="submit" value="Aggiungi">
-  </tr>
-  </table>
+
+  <input id="description_form" type="text" name="description" placeholder="descrizione">
+
+  <input type="button" id="btn_id" value="Aggiungi" onclick="submit_by_id()"/>
+
 </form>
 
 
@@ -99,35 +97,7 @@ Lista server<br />
 <span style="float: left">Last check 3min ago, next in 7min.</span>
 <span style="float: right"><input type="button" value="Elimina" id="delButton" /></span>
 
-<table>
-  <tr>
-    <th></th>
-    <th>Nome</th>
-    <th>Giocatori</th>
-    <th>Ping</th>
-    <th>IP:porta</th>
-  </tr>
-  <tr>
-    <td><input type="checkbox" value="polacco_eu" /></td>
-    <td><a href="#" onclick="copyToClipboard('r1')">Server Polacco [EU]</a></td>
-    <td><a href="#" onclick="copyToClipboard('r1')">13/16</a></td>
-    <td><a href="#" onclick="copyToClipboard('r1')">15ms</a></td>
-    <td><a id="r1" href="#">192.168.0.1:45362</a></td>
-  </tr>
-  <tr>
-    <td><input type="checkbox" value="polacco_global" /></td>
-    <td><a href="#" onclick="copyToClipboard('r2')">Server Polacco [GLOBAL]</a></td>
-    <td><a href="#" onclick="copyToClipboard('r2')">2/16</a></td>
-    <td><a href="#" onclick="copyToClipboard('r2')">12ms</a></td>
-    <td><a id="r2" href="#">192.168.0.2:45362</a></td>
-  </tr>
-  <tr>
-    <td><input type="checkbox" value="harambe" /></td>
-    <td><a href="#" onclick="copyToClipboard('r3')">Harambe</a></td>
-    <td><a href="#" onclick="copyToClipboard('r3')">N/A</a></td>
-    <td><a href="#" onclick="copyToClipboard('r3')">Offline</a></td>
-    <td><a id="r3" href="#">192.168.0.15:45362</a></td>
-  </tr>
+<table id="serversTable">
 </table>
 
 </form>
@@ -141,10 +111,194 @@ Lista server<br />
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 </body>
 
 
 <SCRIPT>
+
+
+
+document.addEventListener("DOMContentLoaded", function(){
+	robbeh();
+	var myVar = setInterval(robbeh, 5000);
+});
+
+
+
+
+function robbeh(){
+
+//Thx to http://youmightnotneedjquery.com/
+var request = new XMLHttpRequest();
+request.open('GET', 'test.php?what=serverList', true);
+
+request.onload = function() {
+  if (request.status >= 200 && request.status < 400) {
+    // Success!
+    var data = JSON.parse(request.responseText);
+
+
+
+
+var username = document.getElementById('username');
+
+username.innerHTML = data["user"]["name"] + "<br />Disconnnetti"
+
+var tobj = data["team"][0]["servers"];
+
+
+var globalCounter = 0;
+
+
+var table = document.getElementById('serversTable');
+
+
+var thead = "<thead><tr><th></th><th>Nome</th><th>Giocatori</th><th>Ping</th><th>IP:porta</th></tr></thead>";
+
+
+var tbody = "<tbody>";
+
+for (var i = 0; i < Object.keys(tobj).length; i++) {
+    var tr = "<tr>";
+
+    tr += '<td><input type="checkbox" value="' + tobj[i].id + '" /></td><td><a href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].name + '</a></td>' + '<td><a href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].players.toString() + '/' + tobj[i].maxPlayers.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].ping.toString() + 'ms</a></td><td><a id="r'+i+'" href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].address.toString() + '</a></td></tr>';
+    tbody += tr;
+}
+
+tbody += "</tbody>";
+table.innerHTML = thead + tbody;
+
+
+
+
+
+  } else {
+    // We reached our target server, but it returned an error
+
+  }
+};
+
+request.onerror = function() {
+  // There was a connection error of some sort
+};
+
+request.send();
+
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Submit form with id function.
+function submit_by_id() {
+
+
+var data = {'name': document.getElementById("name_form").value, 'ipaddress': document.getElementById("ipaddress_form").value, 'port': document.getElementById("port_form").value, 'game': document.getElementById("gioco_form").value, 'description': document.getElementById("description_form").value}
+var params = encodeQueryData(data);
+
+
+var http = new XMLHttpRequest();
+var url = "test.php";
+
+http.open("POST", url, true);
+
+//Send the proper header information along with the request
+http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+http.onreadystatechange = function() {//Call a function when the state changes.
+    if(http.readyState == 4 && http.status == 200) {
+        alert(http.responseText);
+    }
+}
+http.send(params);
+
+
+
+
+
+function encodeQueryData(data) {
+   let ret = [];
+   for (let d in data)
+     ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+   return ret.join('&');
+}
+
+
+
+
+
+//if (validation()) // Calling validation function
+//{
+//document.getElementById("form_id").submit(); //form submission
+//alert(" Name : " + name + " \n Email : " + email + " \n Form Id : " + document.getElementById("form_id").getAttribute("id") + "\n\n Form Submitted Successfully......");
+}
+//}
+
+
+
+
+
+// Name and Email validation Function.
+function validation() {
+var name = document.getElementById("name").value;
+var email = document.getElementById("email").value;
+var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+if (name === '' || email === '') {
+alert("Please fill all fields...!!!!!!");
+return false;
+} else if (!(email).match(emailReg)) {
+alert("Invalid Email...!!!!!!");
+return false;
+} else {
+return true;
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //Thx internet! <3
 function copyToClipboard(elementId) {

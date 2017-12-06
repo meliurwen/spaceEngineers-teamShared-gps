@@ -24,8 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 }
 else{
-
-	$deleteId = $_GET["delete"];
+	if(isset($_GET["delete"])){
+		$deleteId = $_GET["delete"];
+	}
 
 }
 
