@@ -1,118 +1,159 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<style>
-
-#icon {
-  margin: 0px;
-  padding: 0px;
-  position: absolute;
-  right: 10px;
-  top: 10px;
-}
-
-
-table {
-    border-collapse: collapse;
-    width: 100%;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-th {
-    text-align: left;
-    padding: 8px;
-}
-
-tr:nth-child(even){background-color: #cce6ff}
-tr:hover {background-color: #80c1ff}
-
-th {
-    background-color: #3399ff;
-    color: white;
-}
-
-td a {display: block;
-  text-decoration: none;
-  color: black;
-  text-align: left;
-  padding: 8px;
-}
+    <style>
+        #icon {
+            margin: 0px;
+            padding: 0px;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
 
 
-</style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        th {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #cce6ff
+        }
+
+        tr:hover {
+            background-color: #80c1ff
+        }
+
+        th {
+            background-color: #3399ff;
+            color: white;
+        }
+
+        td a {
+            display: block;
+            text-decoration: none;
+            color: black;
+            text-align: left;
+            padding: 8px;
+        }
+
+
+
+
+
+
+        @-webkit-keyframes invalid {
+            from {
+                background-color: red;
+            }
+            to {
+                background-color: inherit;
+            }
+        }
+
+        @-moz-keyframes invalid {
+            from {
+                background-color: red;
+            }
+            to {
+                background-color: inherit;
+            }
+        }
+
+        @-o-keyframes invalid {
+            from {
+                background-color: red;
+            }
+            to {
+                background-color: inherit;
+            }
+        }
+
+        @keyframes invalid {
+            from {
+                background-color: red;
+            }
+            to {
+                background-color: inherit;
+            }
+        }
+
+        .invalid {
+            -webkit-animation: invalid 1s 1;
+            /* Safari 4+ */
+            -moz-animation: invalid 1s 1;
+            /* Fx 5+ */
+            -o-animation: invalid 1s 1;
+            /* Opera 12+ */
+            animation: invalid 1s 1;
+            /* IE 10+ */
+        }
+    </style>
 </head>
+
 <body>
 
-<div id="icon">
-	<p id="username"></p>
-</div>
+    <div id="icon">
+        <p id="username"></p>
+    </div>
 
-<h1 style="margin:0">Space Engineers <span style="color:chartreuse">●</span></h1>
-Lista server<br />
+    <h1 style="margin:0">Space Engineers <span style="color:chartreuse">●</span></h1>
+    Lista server<br />
 
-<div style="float: right;"><a href="#">Modifica</a></div>
-<br />
-
-
-<details>
-	<summary>Info</summary>
-	<p>
-		<b>Info globali</b><br />
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br />
-		<br />
-		<b>oreinfo</b><br />
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-	</p>
-</details>
-
-<br />
-
-<form action="#" method="post" id="form_id">
-
-  <input id="address_form" type="text" name="address" placeholder="indirizzo IP o DNS">
-
-  <input id="port_form" type="text" name="port" placeholder="porta">
-
-  <input id="name_form" type="text" name="name" placeholder="nome">
-
-  <input id="description_form" type="text" name="description" placeholder="descrizione">
-
-  <input type="button" id="btn_id" value="Aggiungi" onclick="submit_by_id()"/>
-
-</form>
+    <div style="float: right;"><a href="#">Modifica</a></div>
+    <br />
 
 
-<br />
+    <details>
+        <summary>Info</summary>
+        <p>
+            <b>Info globali</b><br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br />
+            <br />
+            <b>oreinfo</b><br /> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </p>
+    </details>
+
+    <br />
+
+    <form action="#" method="post" id="form_server">
+
+        <input id="address_form" type="text" name="address" placeholder="indirizzo IP o DNS">
+
+        <input id="port_form" type="text" name="port" placeholder="porta">
+
+        <input id="name_form" type="text" name="name" placeholder="nome">
+
+        <input id="description_form" type="text" name="description" placeholder="descrizione">
+
+        <input type="button" id="btn_id" value="Aggiungi" onclick="submit_by_id()" />
+
+    </form>
 
 
-
-<form action="script.php" method="post">
-
-<span style="float: left">Last check 3min ago, next in 7min.</span>
-<span style="float: right"><input type="button" value="Elimina" id="delButton" /></span>
-
-<table id="serversTable">
-</table>
-
-</form>
-
-<a id="text_element" href="#" onclick="copyToClipboard('text_element')">Cleveland</a>
-<br/><br/><input type="text" placeholder="Paste here for checking" />
-
-<br />
+    <br />
 
 
+    <form action="script.php" method="post">
+
+        <span style="float: left">Ultimo controllo 3min fa, il prossimo in 7min.</span>
+        <span id="replaceButtons" style="float: right"><input type="button" value="Modifica" id="modButton" /></span>
 
 
+        <table id="universalTable">
+        </table>
 
+    </form>
 
+    <br/><br/><input type="text" placeholder="Incolla quì per controllare" />
 
-
-
-
-
-
-
+    <br />
 
 
 
@@ -120,245 +161,268 @@ Lista server<br />
 
 
 <SCRIPT>
+    var tobj_old;
+    var intervalId;
 
+    document.addEventListener("DOMContentLoaded", function() {
+        robbeh();
+        intervalId = setInterval(robbeh, 5000);
+    });
 
 
-document.addEventListener("DOMContentLoaded", function(){
-	robbeh();
-	var myVar = setInterval(robbeh, 5000);
-});
 
 
+    function robbeh() {
 
+        //Thx to http://youmightnotneedjquery.com/
+        var request = new XMLHttpRequest();
+        request.open('GET', 'test.php?operation=get_serverList', true);
 
-function robbeh(){
+        request.onload = function() {
+            if (request.status >= 200 && request.status < 400) {
+                // Success!
+                var data = JSON.parse(request.responseText);
 
-//Thx to http://youmightnotneedjquery.com/
-var request = new XMLHttpRequest();
-request.open('GET', 'test.php?operation=get_serverList', true);
 
-request.onload = function() {
-  if (request.status >= 200 && request.status < 400) {
-    // Success!
-    var data = JSON.parse(request.responseText);
 
 
+                var username = document.getElementById('username');
+                username.innerHTML = data["user"]["name"] + "<br />Disconnnetti"
+                var tobj = data["items"]["servers_list"];
+                if (tobj_old === undefined) {
+                    tobj_old = tobj;
+                }
 
+                // Build the table
+                build_table(1, tobj, "universalTable", "serverList");
 
-var username = document.getElementById('username');
+                tobj_old = tobj;
 
-username.innerHTML = data["user"]["name"] + "<br />Disconnnetti"
 
-var tobj = data["items"]["servers_list"];
 
 
-var globalCounter = 0;
+            } else {
+                // We reached our target server, but it returned an error
 
+            }
+        };
 
-var table = document.getElementById('serversTable');
+        request.onerror = function() {
+            // There was a connection error of some sort
+        };
 
+        request.send();
 
-var thead = "<thead><tr><th></th><th>Nome</th><th>Giocatori</th><th>Ping</th><th>IP:porta</th></tr></thead>";
 
+    };
 
-var tbody = "<tbody>";
 
-for (var i = 0; i < Object.keys(tobj).length; i++) {
-    var tr = "<tr>";
 
-    tr += '<td><input type="checkbox" value="' + tobj[i].server_id + '" /></td><td><a href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].name + '</a></td>' + '<td><a href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].players.toString() + '/' + tobj[i].maxPlayers.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].ping.toString() + 'ms</a></td><td><a id="r'+i+'" href="#" onclick="copyToClipboard(\'r'+i+'\')">' + tobj[i].address.toString() + ":" + tobj[i].port.toString() + '</a></td></tr>';
-    tbody += tr;
-}
+    function build_table(head, body, idTable, mode) {
 
-tbody += "</tbody>";
-table.innerHTML = thead + tbody;
 
+        if (mode === "serverList") {
+            var table = document.getElementById(idTable);
+            var thead = "<thead><tr><th>Nome</th><th>Giocatori</th><th>Ping</th><th>IP:porta</th></tr></thead>";
+            var tbody = "<tbody>";
 
+            for (var i = 0; i < Object.keys(body).length; i++) {
+                var tr = '<tr class="invalid">';
+                if (i < Object.keys(tobj_old).length) {
+                    if (tobj_old[i]["server_id"] === body[i]["server_id"]) {
+                        var tr = '<tr>';
+                    }
+                }
+                tr += '<td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body[i].name + '</a></td>' + '<td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body[i].players.toString() + '/' + body[i].maxPlayers.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body[i].ping.toString() + 'ms</a></td><td><a id="r' + i + '" href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body[i].address.toString() + ":" + body[i].port.toString() + '</a></td></tr>';
+                tbody += tr;
+            }
 
+            tbody += "</tbody>";
+            table.innerHTML = thead + tbody;
+        } else if (mode === "serverList_modify") {
 
 
-  } else {
-    // We reached our target server, but it returned an error
+            var table = document.getElementById(idTable);
+            var thead = "<thead><tr><th>🚮</th><th>Nome</th><th>Giocatori</th><th>Ping</th><th>IP:porta</th></tr></thead>";
+            var tbody = "<tbody>";
 
-  }
-};
+            for (var i = 0; i < Object.keys(body).length; i++) {
+                var tr = '<tr>';
+                tr += '<td><input type="checkbox" value="' + body[i].server_id + '" /></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body[i].name + '</a></td>' + '<td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body[i].players.toString() + '/' + body[i].maxPlayers.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body[i].ping.toString() + 'ms</a></td><td><a id="r' + i + '" href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body[i].address.toString() + ":" + body[i].port.toString() + '</a></td></tr>';
+                tbody += tr;
+            }
 
-request.onerror = function() {
-  // There was a connection error of some sort
-};
+            tbody += "</tbody>";
+            table.innerHTML = thead + tbody;
 
-request.send();
+        }
 
-
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Submit form with id function.
-function submit_by_id() {
-
-
-var data = {'operation': 'add_server',
-		'address': document.getElementById("address_form").value,
-		'port': document.getElementById("port_form").value,
-		'name': document.getElementById("name_form").value,
-		'description': document.getElementById("description_form").value}
-var params = encodeQueryData(data);
-
-
-
-sendPOST(params);
-
-
-
-}
-
-
-
-
-
-
-function sendPOST(params){
-
-
-var http = new XMLHttpRequest();
-var url = "test.php";
-
-http.open("POST", url, true);
-
-//Send the proper header information along with the request
-http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-http.onreadystatechange = function() {//Call a function when the state changes.
-    if(http.readyState == 4 && http.status == 200) {
-        alert(http.responseText);
     }
-}
-http.send(params);
-
-
-
-}
-
-
-
-function encodeQueryData(data) {
-   let ret = [];
-   for (let d in data)
-if(Array.isArray(data[d])){
-
-data[d].forEach(function(element, indice) {
-    ret.push(encodeURIComponent(d) + '[]=' + encodeURIComponent(element));
-});
-
-}else{
-     ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
-}
-console.log(ret.join('&'))
-   return ret.join('&');
-}
 
 
 
 
+    // Submit form with id function.
+    function submit_by_id() {
+
+
+        var data = {
+            'operation': 'add_server',
+            'address': document.getElementById("address_form").value,
+            'port': document.getElementById("port_form").value,
+            'name': document.getElementById("name_form").value,
+            'description': document.getElementById("description_form").value
+        }
+        var params = encodeQueryData(data);
 
 
 
+        sendPOST(params);
+
+        document.getElementById("form_server").reset();
 
 
-
-
-
-
-
-
-
-
-
-
-//Thx internet! <3
-function copyToClipboard(elementId) {
-
-  // Create an auxiliary hidden input
-  var aux = document.createElement("input");
-
-  // Get the text from the element passed into the input
-  aux.setAttribute("value", document.getElementById(elementId).innerHTML);
-
-  // Append the aux input to the body
-  document.body.appendChild(aux);
-
-  // Highlight the content
-  aux.select();
-
-  // Execute the copy command
-  document.execCommand("copy");
-
-  // Remove the input from the body
-  document.body.removeChild(aux);
-
-
-}
-
-function log(){
-	console.log('---')
-}
-
-
-
-
-// Ritorna un array con i valori dei checkbox selezionati
-function getSelectedChbox(elementi) {
-  var array = [];        // Array che conterrà i valori dei checkbox selezionati
-
-  // ottiene tutti i tag "input" ed il loro numero
-  var inpfields = elementi.getElementsByTagName('input');
-  var nr_inpfields = inpfields.length;
-
-  for(var i=0; i<nr_inpfields; i++) {
-    //solo i tag "input" che sono checkbox e sono selezionati
-    if(inpfields[i].type == 'checkbox' && inpfields[i].checked == true){
-	array.push(inpfields[i].value);
     }
-  }
-
-  return {"operation":"del_server", "server_id":array};
-}
-
-
-// Quando si clicca sul pulsante con tag #delButton, viene lanciato un alert con i valori selezionati nelle checkbox
-document.getElementById('delButton').onclick = function(){
-  var data = getSelectedChbox(this.form);
-
-
-var params = encodeQueryData(data);
 
 
 
-sendPOST(params);
+
+    function sendPOST(params) {
+
+
+        var http = new XMLHttpRequest();
+        var url = "test.php";
+
+        http.open("POST", url, true);
+
+        //Send the proper header information along with the request
+        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        http.onreadystatechange = function() { //Call a function when the state changes.
+            if (http.readyState == 4 && http.status == 200) {
+                alert(http.responseText);
+            }
+        }
+        http.send(params);
 
 
 
-  alert(JSON.stringify(data));
-}
+    }
 
 
+
+    function encodeQueryData(data) {
+        let ret = [];
+        for (let d in data)
+            if (Array.isArray(data[d])) {
+
+                data[d].forEach(function(element, indice) {
+                    ret.push(encodeURIComponent(d) + '[]=' + encodeURIComponent(element));
+                });
+
+            } else {
+                ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+            }
+        console.log(ret.join('&'))
+        return ret.join('&');
+    }
+
+
+
+
+    //Thx internet! <3
+    function copyToClipboard(elementId) {
+
+        // Create an auxiliary hidden input
+        var aux = document.createElement("input");
+
+        // Get the text from the element passed into the input
+        aux.setAttribute("value", document.getElementById(elementId).innerHTML);
+
+        // Append the aux input to the body
+        document.body.appendChild(aux);
+
+        // Highlight the content
+        aux.select();
+
+        // Execute the copy command
+        document.execCommand("copy");
+
+        // Remove the input from the body
+        document.body.removeChild(aux);
+
+
+    }
+
+    function log() {
+        console.log('---')
+    }
+
+
+
+
+    // Ritorna un array con i valori dei checkbox selezionati
+    function getSelectedChbox(elementi) {
+        var array = []; // Array che conterrà i valori dei checkbox selezionati
+
+        // ottiene tutti i tag "input" ed il loro numero
+        var inpfields = elementi.getElementsByTagName('input');
+        var nr_inpfields = inpfields.length;
+
+        for (var i = 0; i < nr_inpfields; i++) {
+            //solo i tag "input" che sono checkbox e sono selezionati
+            if (inpfields[i].type == 'checkbox' && inpfields[i].checked == true) {
+                array.push(inpfields[i].value);
+            }
+        }
+
+        return {
+            "operation": "del_server",
+            "server_id": array
+        };
+    }
+
+
+
+
+    // Quando si clicca sul pulsante con tag #modButton, viene lanciato un alert con i valori selezionati nelle checkbox
+    document.getElementById('modButton').onclick = function() {
+
+        var delButton = document.getElementById('replaceButtons');
+        delButton.innerHTML = '<input type="button" value="Esci modalità modifica" id="modButtonExit" />';
+
+        //Costruisce la tabella
+        build_table(1, tobj_old, "universalTable", "serverList_modify");
+
+
+        //Ferma l'intervallo
+        clearInterval(intervalId);
+
+
+
+
+        // Quando si clicca sul pulsante con tag #modButtonExit, viene lanciato un alert con i valori selezionati nelle checkbox
+        document.getElementById('modButtonExit').onclick = function() {
+
+            var delButton = document.getElementById('replaceButtons');
+
+            //Elimina le righe selezionate
+            var data = getSelectedChbox(this.form);
+            var params = encodeQueryData(data);
+            sendPOST(params);
+
+            delButton.innerHTML = '<input type="button" value="Modifica" id="modButton" />';
+
+            //TODO: Vedere di capire perchè questo coso sotto non funziona al 100%
+            intervalId = setInterval(robbeh, 5000);
+
+            //alert("bubba");
+        }
+
+
+
+
+    }
 </SCRIPT>
 
 </html>
