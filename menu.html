@@ -142,8 +142,8 @@
 
     <form action="script.php" method="post">
 
-        <span style="float: left">Ultimo controllo 3min fa, il prossimo in 7min.</span>
-        <span id="replaceButtons" style="float: right"><input type="button" value="Modifica" id="modButton" /></span>
+        <span style="float: left">Prossimo aggiornamento in <span id="time">05:00</span> minuti.</span>
+        <span id="replaceButtons" style="float: right"><input type="button" value="Modifica" id="modButton" onclick="modifyMode()"/></span>
 
 
         <table id="universalTable">
@@ -180,11 +180,8 @@
 
         request.onload = function() {
             if (request.status >= 200 && request.status < 400) {
-                // Success!
+                // Yohoo! Success!
                 var data = JSON.parse(request.responseText);
-
-
-
 
                 var username = document.getElementById('username');
                 username.innerHTML = data["user"]["name"] + "<br />Disconnnetti"
@@ -198,28 +195,20 @@
 
                 tobj_old = tobj;
 
-
-
-
             } else {
                 // We reached our target server, but it returned an error
-
             }
         };
-
         request.onerror = function() {
             // There was a connection error of some sort
         };
 
         request.send();
-
-
     };
 
 
 
     function build_table(head, body, idTable, mode) {
-
 
         if (mode === "serverList") {
             var table = document.getElementById(idTable);
@@ -256,7 +245,6 @@
             table.innerHTML = thead + tbody;
 
         }
-
     }
 
 
@@ -264,8 +252,6 @@
 
     // Submit form with id function.
     function submit_by_id() {
-
-
         var data = {
             'operation': 'add_server',
             'address': document.getElementById("address_form").value,
@@ -274,14 +260,8 @@
             'description': document.getElementById("description_form").value
         }
         var params = encodeQueryData(data);
-
-
-
         sendPOST(params);
-
         document.getElementById("form_server").reset();
-
-
     }
 
 
@@ -304,9 +284,6 @@
             }
         }
         http.send(params);
-
-
-
     }
 
 
@@ -362,11 +339,11 @@
 
 
     // Ritorna un array con i valori dei checkbox selezionati
-    function getSelectedChbox(elementi) {
+    function getSelectedChbox() {
         var array = []; // Array che conterrà i valori dei checkbox selezionati
 
         // ottiene tutti i tag "input" ed il loro numero
-        var inpfields = elementi.getElementsByTagName('input');
+        var inpfields = document.getElementsByTagName('input');
         var nr_inpfields = inpfields.length;
 
         for (var i = 0; i < nr_inpfields; i++) {
@@ -386,10 +363,10 @@
 
 
     // Quando si clicca sul pulsante con tag #modButton, viene lanciato un alert con i valori selezionati nelle checkbox
-    document.getElementById('modButton').onclick = function() {
+    function modifyMode() {
 
         var delButton = document.getElementById('replaceButtons');
-        delButton.innerHTML = '<input type="button" value="Esci modalità modifica" id="modButtonExit" />';
+        delButton.innerHTML = '<input type="button" value="Esci modalità modifica" id="modButtonExit" onclick="modifyModeExit()" />';
 
         //Costruisce la tabella
         build_table(1, tobj_old, "universalTable", "serverList_modify");
@@ -398,31 +375,55 @@
         //Ferma l'intervallo
         clearInterval(intervalId);
 
+    }
 
 
 
-        // Quando si clicca sul pulsante con tag #modButtonExit, viene lanciato un alert con i valori selezionati nelle checkbox
-        document.getElementById('modButtonExit').onclick = function() {
+    // Quando si clicca sul pulsante con tag #modButtonExit, viene lanciato un alert con i valori selezionati nelle checkbox
+    function modifyModeExit() {
 
-            var delButton = document.getElementById('replaceButtons');
+        var delButton = document.getElementById('replaceButtons');
 
-            //Elimina le righe selezionate
-            var data = getSelectedChbox(this.form);
-            var params = encodeQueryData(data);
-            sendPOST(params);
+        //Elimina le righe selezionate
+        var data = getSelectedChbox();
+        var params = encodeQueryData(data);
+        sendPOST(params);
 
-            delButton.innerHTML = '<input type="button" value="Modifica" id="modButton" />';
+        delButton.innerHTML = '<input type="button" value="Modifica" id="modButton" onclick="modifyMode()" />';
 
-            //TODO: Vedere di capire perchè questo coso sotto non funziona al 100%
-            intervalId = setInterval(robbeh, 5000);
-
-            //alert("bubba");
-        }
-
-
-
+        //Soluzione birikina (e triste)
+        var evt = document.createEvent("MutationEvents");
+        evt.initMutationEvent("DOMContentLoaded", true, true, document, "", "", "", 0);
+        document.dispatchEvent(evt);
 
     }
+
+
+
+
+    function startTimer(duration, display) {
+        var timer = duration,
+            minutes, seconds;
+        setInterval(function() {
+            minutes = parseInt(timer / 60, 10)
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                timer = duration;
+            }
+        }, 1000);
+    }
+
+    window.onload = function() {
+        var fiveMinutes = 60 * 5,
+            display = document.querySelector('#time');
+        startTimer(fiveMinutes, display);
+    };
 </SCRIPT>
 
 </html>
