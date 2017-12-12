@@ -2,6 +2,9 @@
 <html>
 
 <head>
+
+    <meta charset="UTF-8">
+
     <style>
         #icon {
             margin: 0px;
@@ -148,10 +151,16 @@
 
 
 <SCRIPT>
-
-var url = "test.php"
+    var url = "api.php"
 
     var mode = "serverList";
+
+
+    var pivot_coordinate = {
+        'x': 0,
+        'y': 0,
+        'z': 0
+    };
 
     var server;
 
@@ -178,9 +187,9 @@ var url = "test.php"
         //Thx to http://youmightnotneedjquery.com/
         var request = new XMLHttpRequest();
         if (mode === "serverList") {
-            request.open('GET', url+'?operation=get_serverList', true);
+            request.open('GET', url + '?operation=get_serverList', true);
         } else if (mode === "server_coords") {
-            request.open('GET', url+'?operation=get_serverCoords&server_id=' + server, true);
+            request.open('GET', url + '?operation=get_serverCoords&server_id=' + server, true);
         }
 
         request.onload = function() {
@@ -239,21 +248,21 @@ var url = "test.php"
                         document.getElementById("categories_form").multiple = true;
 
 
-var inputBox = document.getElementById('raw_form');
+                        var inputBox = document.getElementById('raw_form');
 
-inputBox.onkeyup = function(){
+                        inputBox.onkeyup = function() {
 
-if(inputBox.value.match(/^GPS:([^:]+):([-]?[0-9.]+):([-]?[0-9.]+):([-]?[0-9.]+):$/)){
-    document.getElementById('raw_form').style.backgroundColor = "#d2ff6f";
-} else {
-    document.getElementById('raw_form').style.backgroundColor = "#ff6f6f";
-}
+                            if (inputBox.value.match(/^GPS:([^:]+):([-]?[0-9.]+):([-]?[0-9.]+):([-]?[0-9.]+):$/)) {
+                                document.getElementById('raw_form').style.backgroundColor = "#d2ff6f";
+                            } else {
+                                document.getElementById('raw_form').style.backgroundColor = "#ff6f6f";
+                            }
 
-if(inputBox.value === ""){
-    document.getElementById('raw_form').style.backgroundColor = "transparent";
-}
+                            if (inputBox.value === "") {
+                                document.getElementById('raw_form').style.backgroundColor = "transparent";
+                            }
 
-}
+                        }
 
 
                         titleFirstTime_flag = false;
@@ -328,10 +337,8 @@ if(inputBox.value === ""){
         } else if (mode == "server_coords") {
 
             var table = document.getElementById(idTable);
-            var thead = "<thead><tr><th>Nome</th><th>Aggiunte da</th><th>Categoria</th><th>Raw</th></tr></thead>";
+            var thead = "<thead><tr><th>Nome</th><th>Distanza</th><th>Aggiunte da</th><th>Categoria</th><th>Raw</th></tr></thead>";
             var tbody = "<tbody>";
-
-            console.log("OLD: " + Object.keys(body["coords"]).length + " NEW: " + Object.keys(coords_obj_old["coords"]).length);
 
             for (var i = 0; i < Object.keys(body["coords"]).length; i++) {
                 var tr = '<tr class="invalid">';
@@ -340,7 +347,8 @@ if(inputBox.value === ""){
                         var tr = '<tr>';
                     }
                 }
-                tr += '<td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + get_name_form_coords(body["coords"][i].raw) + '</a></td>' + '<td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].owner_name.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + "categorie" + 'ms</a></td><td><a id="r' + i + '" href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].raw.toString() + '</a></td></tr>';
+                var coords_attr_temp = get_coords_attr(body["coords"][i].raw);
+                tr += '<td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + coords_attr_temp.name + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + metersToHuman(coords_attr_temp.distance) + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].owner_name.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + categories_toString(body["coords"][i].categories) + '</a></td><td><a id="r' + i + '" href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].raw.toString() + '</a></td></tr>';
                 tbody += tr;
             }
 
@@ -352,12 +360,13 @@ if(inputBox.value === ""){
 
 
             var table = document.getElementById(idTable);
-            var thead = "<thead><tr><th>🚮</th><th>Nome</th><th>Aggiunte da</th><th>Categoria</th><th>Raw</th></tr></thead>";
+            var thead = "<thead><tr><th>🚮</th><th>Nome</th><th>Distanza</th><th>Aggiunte da</th><th>Categoria</th><th>Raw</th></tr></thead>";
             var tbody = "<tbody>";
 
             for (var i = 0; i < Object.keys(body["coords"]).length; i++) {
                 var tr = '<tr>';
-                tr += '<td><input type="checkbox" value="' + body["coords"][i].coordinate_id + '" /></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + get_name_form_coords(body["coords"][i].raw) + '</a></td>' + '<td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].owner_name.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + "categorie" + 'ms</a></td><td><a id="r' + i + '" href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].raw.toString() + '</a></td></tr>';
+                var coords_attr_temp = get_coords_attr(body["coords"][i].raw);
+                tr += '<td><input type="checkbox" value="' + body["coords"][i].coordinate_id + '" /></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + coords_attr_temp.name + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + metersToHuman(coords_attr_temp.distance) + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].owner_name.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + categories_toString(body["coords"][i].categories) + '</a></td><td><a id="r' + i + '" href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].raw.toString() + '</a></td></tr>';
                 tbody += tr;
             }
 
@@ -459,31 +468,29 @@ if(inputBox.value === ""){
         }
 
 
-var raw = document.getElementById('raw_form').value.match(/^GPS:([^:]+):([-]?[0-9.]+):([-]?[0-9.]+):([-]?[0-9.]+):$/);
+        var raw = document.getElementById('raw_form').value.match(/^GPS:([^:]+):([-]?[0-9.]+):([-]?[0-9.]+):([-]?[0-9.]+):$/);
 
-if(raw){
-
-
+        if (raw) {
 
 
-        var data = {
-            'operation': 'add_coordinates',
-            'raw': raw[0],
-            'categories': categories,
-            'owner_id': document.getElementById("owner_form").value,
-            'server_id': document.getElementById("server_id_form").value
+
+
+            var data = {
+                'operation': 'add_coordinates',
+                'raw': raw[0],
+                'categories': categories,
+                'owner_id': document.getElementById("owner_form").value,
+                'server_id': document.getElementById("server_id_form").value
+            }
+            var params = encodeQueryData(data);
+            sendPOST(params);
+            document.getElementById("form_server").reset();
+
+
+
+        } else {
+            alert("Alcuni campi non sono stati compilati in maniera corretta!");
         }
-        var params = encodeQueryData(data);
-        sendPOST(params);
-        document.getElementById("form_server").reset();
-
-
-
-} else {
-     alert("Hello! I am an alert box!!");
-}
-
-
 
 
     }
@@ -707,11 +714,62 @@ if(raw){
 
 
 
-function get_name_form_coords(raw){
-return raw.match(/^GPS:([^:]+):([-]?[0-9.]+):([-]?[0-9.]+):([-]?[0-9.]+):$/)[1];
-}
+    function get_coords_attr(raw) {
+
+        raw = raw.match(/^GPS:([^:]+):([-]?[0-9.]+):([-]?[0-9.]+):([-]?[0-9.]+):$/);
 
 
+
+        return {
+            'name': raw[1],
+            'distance': distanceVector({
+                'x': raw[2],
+                'y': raw[3],
+                'z': raw[4]
+            }, pivot_coordinate)
+        };
+    }
+
+
+
+    function distanceVector(v1, v2) {
+        var dx = v1.x - v2.x;
+        var dy = v1.y - v2.y;
+        var dz = v1.z - v2.z;
+
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
+
+    function metersToHuman(distance) {
+        if (distance >= 1000) {
+            var num = distance / 1000;
+            return num.toFixed(2) + "Km";
+        } else if (distance >= 1) {
+            return distance.toFixed(2) + "m";
+        } else {
+            var num = distance * 100;
+            return num.toFixed(0) + "cm";
+        }
+
+    }
+
+
+    function categories_toString(cat_array) {
+
+        var cat_string = '';
+
+        for (var i = 0; i < cat_array.length; i++) {
+            if (i === cat_array.length - 1) {
+                cat_string = cat_string + cat_array;
+            } else {
+                cat_string = cat_string + cat_array + ", ";
+            }
+        }
+
+        return cat_string;
+
+    }
 </SCRIPT>
 
 </html>

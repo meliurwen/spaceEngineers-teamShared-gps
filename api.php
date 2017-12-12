@@ -5,7 +5,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
-$filename = "testz.sqlite3";
+$filename = "spaceEngineersGps.sqlite3";
 $database = $filename;
 $tabella  = "coordinate";
 
