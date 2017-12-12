@@ -339,6 +339,8 @@ if (isset($_GET["operation"])) {
 
 
 
+$db->close();
+
 
 
 ?> 
