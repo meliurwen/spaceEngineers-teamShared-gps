@@ -5,6 +5,9 @@
 </head>
 
 <body>
+
+    <h1 style="margin:0">Space Engineers Shared GPS</h1>
+
 	<?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -33,8 +36,6 @@ else{
 
 	//phpinfo();
 	//exit;
-
-	echo "<p><a href='" . $_SERVER['PHP_SELF'] . "?database=".$database."'>Indietro</a></p>";
 
 	//Connessione al database
 	class MyDB extends SQLite3
@@ -82,10 +83,10 @@ if (($_SERVER['REQUEST_METHOD'] === 'POST') & isset($coordinate, $descrizione, $
   <table>
   <td>
   <tr>
-  <input type="text" name="coordinate" value="coordinate">
+  <input type="text" name="coordinate" placeholder="coordinate">
   </tr>
   <tr>
-  <input type="text" name="descrizione" value="descrizione">
+  <input type="text" name="descrizione" placeholder="descrizione">
   </tr>
   <tr>
   <select name="idServer">
@@ -110,6 +111,8 @@ if (($_SERVER['REQUEST_METHOD'] === 'POST') & isset($coordinate, $descrizione, $
 
 
 <?php
+	echo "<p><a href='" . $_SERVER['PHP_SELF'] . "'>Aggiorna</a></p>";
+
 	//INIZIO TABELLA
 	//Numero Colonne Tabella
 	$tablesquery = $db->query("PRAGMA table_info(" . $tabella . ");");
