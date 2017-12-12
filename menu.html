@@ -120,17 +120,6 @@
     <br />
 
     <form action="#" method="post" id="form_server">
-
-        <input id="address_form" type="text" name="address" placeholder="indirizzo IP o DNS">
-
-        <input id="port_form" type="text" name="port" placeholder="porta">
-
-        <input id="name_form" type="text" name="name" placeholder="nome">
-
-        <input id="description_form" type="text" name="description" placeholder="descrizione">
-
-        <input type="button" id="btn_id" value="Aggiungi" onclick="add_server()" />
-
     </form>
 
 
@@ -159,6 +148,9 @@
 
 
 <SCRIPT>
+
+var url = "test.php"
+
     var mode = "serverList";
 
     var server;
@@ -186,9 +178,9 @@
         //Thx to http://youmightnotneedjquery.com/
         var request = new XMLHttpRequest();
         if (mode === "serverList") {
-            request.open('GET', 'test.php?operation=get_serverList', true);
+            request.open('GET', url+'?operation=get_serverList', true);
         } else if (mode === "server_coords") {
-            request.open('GET', 'test.php?operation=get_serverCoords&server_id=' + server, true);
+            request.open('GET', url+'?operation=get_serverCoords&server_id=' + server, true);
         }
 
         request.onload = function() {
@@ -220,7 +212,6 @@
         <input type="button" id="btn_id" value="Aggiungi" onclick="add_server()" />';
 
 
-
                         titleFirstTime_flag = false;
                     }
 
@@ -246,6 +237,24 @@
 <select id="owner_form" name="owner" size="1"><option>Attendere...</option></select>\
 <input type="button" id="btn_id" value="Aggiungi" onclick="add_coordinates()" />';
                         document.getElementById("categories_form").multiple = true;
+
+
+var inputBox = document.getElementById('raw_form');
+
+inputBox.onkeyup = function(){
+
+if(inputBox.value.match(/^GPS:([^:]+):([-]?[0-9.]+):([-]?[0-9.]+):([-]?[0-9.]+):$/)){
+    document.getElementById('raw_form').style.backgroundColor = "#d2ff6f";
+} else {
+    document.getElementById('raw_form').style.backgroundColor = "#ff6f6f";
+}
+
+if(inputBox.value === ""){
+    document.getElementById('raw_form').style.backgroundColor = "transparent";
+}
+
+}
+
 
                         titleFirstTime_flag = false;
                     }
@@ -331,7 +340,7 @@
                         var tr = '<tr>';
                     }
                 }
-                tr += '<td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + "bubba" + '</a></td>' + '<td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].owner_name.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + "categorie" + 'ms</a></td><td><a id="r' + i + '" href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].raw.toString() + '</a></td></tr>';
+                tr += '<td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + get_name_form_coords(body["coords"][i].raw) + '</a></td>' + '<td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].owner_name.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + "categorie" + 'ms</a></td><td><a id="r' + i + '" href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].raw.toString() + '</a></td></tr>';
                 tbody += tr;
             }
 
@@ -348,7 +357,7 @@
 
             for (var i = 0; i < Object.keys(body["coords"]).length; i++) {
                 var tr = '<tr>';
-                tr += '<td><input type="checkbox" value="' + body["coords"][i].coordinate_id + '" /></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + "bubba" + '</a></td>' + '<td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].owner_name.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + "categorie" + 'ms</a></td><td><a id="r' + i + '" href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].raw.toString() + '</a></td></tr>';
+                tr += '<td><input type="checkbox" value="' + body["coords"][i].coordinate_id + '" /></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + get_name_form_coords(body["coords"][i].raw) + '</a></td>' + '<td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].owner_name.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + "categorie" + 'ms</a></td><td><a id="r' + i + '" href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body["coords"][i].raw.toString() + '</a></td></tr>';
                 tbody += tr;
             }
 
@@ -449,9 +458,17 @@
             }
         }
 
+
+var raw = document.getElementById('raw_form').value.match(/^GPS:([^:]+):([-]?[0-9.]+):([-]?[0-9.]+):([-]?[0-9.]+):$/);
+
+if(raw){
+
+
+
+
         var data = {
             'operation': 'add_coordinates',
-            'raw': document.getElementById("raw_form").value,
+            'raw': raw[0],
             'categories': categories,
             'owner_id': document.getElementById("owner_form").value,
             'server_id': document.getElementById("server_id_form").value
@@ -459,6 +476,16 @@
         var params = encodeQueryData(data);
         sendPOST(params);
         document.getElementById("form_server").reset();
+
+
+
+} else {
+     alert("Hello! I am an alert box!!");
+}
+
+
+
+
     }
 
 
@@ -467,7 +494,6 @@
 
 
         var http = new XMLHttpRequest();
-        var url = "test.php";
 
         http.open("POST", url, true);
 
@@ -677,6 +703,15 @@
         }
 
     }
+
+
+
+
+function get_name_form_coords(raw){
+return raw.match(/^GPS:([^:]+):([-]?[0-9.]+):([-]?[0-9.]+):([-]?[0-9.]+):$/)[1];
+}
+
+
 </SCRIPT>
 
 </html>
