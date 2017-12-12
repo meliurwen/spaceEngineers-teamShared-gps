@@ -139,11 +139,8 @@
 
 
 
-    <span id="upTableText" style="float: left">Prossimo aggiornamento in <span id="time">05:00</span> minuti.</span>
-    <span id="upTableText" style="text-align: middle">
-<textarea id="output"></textarea>
-<button id="paste">Paste</button>
-</span>
+    <span id="upTableText" style="float: left"></span>
+
     <span id="replaceButtons" style="float: right"><input type="button" value="Modifica" id="modButton" onclick="modifyMode()"/></span>
 
 
@@ -173,6 +170,8 @@
     var owners_old = null;
 
     var titleFirstTime_flag = true;
+
+    var upTableText_temp = '';
 
     document.addEventListener("DOMContentLoaded", function() {
         robbeh();
@@ -212,6 +211,16 @@
                         document.getElementById('title_small_players').innerHTML = "";
                         document.getElementById('title_small_status').innerHTML = "";
                         document.getElementById('general_info').innerHTML = data["items"]["settings"]["description_home"];
+
+                        document.getElementById('upTableText').innerHTML = 'Prossimo aggiornamento in <span id="time">05:00</span> minuti.';
+                        document.getElementById('form_server').innerHTML = '<input id="address_form" type="text" name="address" placeholder="indirizzo IP o DNS">\
+        <input id="port_form" type="text" name="port" placeholder="porta">\
+        <input id="name_form" type="text" name="name" placeholder="nome">\
+        <input id="description_form" type="text" name="description" placeholder="descrizione">\
+        <input type="button" id="btn_id" value="Aggiungi" onclick="add_server()" />';
+
+
+
                         titleFirstTime_flag = false;
                     }
 
@@ -230,6 +239,14 @@
                         document.getElementById('title_big').innerHTML = data["items"]["server_coords"]["server"]["name"];
                         document.getElementById('title_small').innerHTML = data["items"]["server_coords"]["server"]["address"] + ":" + data["items"]["server_coords"]["server"]["port"];
                         document.getElementById('general_info').innerHTML = data["items"]["server_coords"]["server"]["description"];
+
+                        document.getElementById('upTableText').innerHTML = '<a href="#" onclick="goto_serverList()" />Indietro</a>';
+                        document.getElementById('form_server').innerHTML = '<input type="hidden" id="server_id_form" name="server_id" value="' + server + '"><input id="raw_form" type="text" name="raw" placeholder="coordinate">\
+<select id="categories_form" name="categories" size="4"><option>Attendere...</option></select>\
+<select id="owner_form" name="owner" size="1"><option>Attendere...</option></select>\
+<input type="button" id="btn_id" value="Aggiungi" onclick="add_coordinates()" />';
+                        document.getElementById("categories_form").multiple = true;
+
                         titleFirstTime_flag = false;
                     }
 
@@ -242,7 +259,7 @@
                     build_table(1, coords_obj, "universalTable");
                     coords_obj_old = coords_obj;
 
-                    //Finish to compie the forms and updates them only when necessary
+                    //Finish to compile forms and updates them only when necessary
                     build_form(data);
 
 
@@ -552,9 +569,12 @@
 
         var delButton = document.getElementById('replaceButtons');
         delButton.innerHTML = '<input type="button" value="Esci modalità modifica" id="modButtonExit" onclick="modifyModeExit()" />';
+        upTableText_temp = document.getElementById('upTableText').innerHTML;
+        document.getElementById('upTableText').innerHTML = '';
 
         //Ferma l'intervallo
         clearInterval(intervalId);
+        intervalId = false;
 
         if (mode === "server_coords") {
             mode = "server_coords_modify";
@@ -582,6 +602,7 @@
         sendPOST(params);
 
         delButton.innerHTML = '<input type="button" value="Modifica" id="modButton" onclick="modifyMode()" />';
+        document.getElementById('upTableText').innerHTML = upTableText_temp;
 
         if (mode === "server_coords_modify") {
             mode = "server_coords";
@@ -590,56 +611,24 @@
         }
 
         //Soluzione birikina (e triste)
-        var evt = document.createEvent("MutationEvents");
-        evt.initMutationEvent("DOMContentLoaded", true, true, document, "", "", "", 0);
-        document.dispatchEvent(evt);
+        //var evt = document.createEvent("MutationEvents");
+        //evt.initMutationEvent("DOMContentLoaded", true, true, document, "", "", "", 0);
+        //document.dispatchEvent(evt);
+        //Soluzione alternativa meno birikina
+        robbeh();
+        if (!intervalId) {
+            console.log("goto_serveList: " + intervalId);
+            intervalId = setInterval(robbeh, 5000);
+        }
 
     }
-
-
-
-
-    function startTimer(duration, display) {
-        var timer = duration,
-            minutes, seconds;
-        setInterval(function() {
-            minutes = parseInt(timer / 60, 10)
-            seconds = parseInt(timer % 60, 10);
-
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-
-            display.textContent = minutes + ":" + seconds;
-
-            if (--timer < 0) {
-                timer = duration;
-            }
-        }, 1000);
-    }
-
-    window.onload = function() {
-        var fiveMinutes = 60 * 5,
-            display = document.querySelector('#time');
-        startTimer(fiveMinutes, display);
-    };
-
-
 
 
     function goto_serverCoords(server_id) {
 
 
-        document.getElementById('upTableText').innerHTML = '<a href="#" onclick="goto_serverList()" />Indietro</a>';
+
         coords_obj_old = null;
-
-
-        document.getElementById('form_server').innerHTML = '<input type="hidden" id="server_id_form" name="server_id" value="' + server_id + '"><input id="raw_form" type="text" name="raw" placeholder="coordinate">\
-<select id="categories_form" name="categories" size="4"><option>Attendere...</option></select>\
-<select id="owner_form" name="owner" size="1"><option>Attendere...</option></select>\
-<input type="button" id="btn_id" value="Aggiungi" onclick="add_coordinates()" />';
-
-
-        document.getElementById("categories_form").multiple = true;
 
         categories_old = null;
         owners_old = null;
@@ -650,10 +639,17 @@
         mode = "server_coords";
         titleFirstTime_flag = true;
 
+
         //(Altra) Soluzione birikina (e triste)
-        var evt = document.createEvent("MutationEvents");
-        evt.initMutationEvent("DOMContentLoaded", true, true, document, "", "", "", 0);
-        document.dispatchEvent(evt);
+        //var evt = document.createEvent("MutationEvents");
+        //evt.initMutationEvent("DOMContentLoaded", true, true, document, "", "", "", 0);
+        //document.dispatchEvent(evt);
+        //Soluzione alternativa meno birikina
+        robbeh();
+        if (!intervalId) {
+            console.log("goto_serveList: " + intervalId);
+            intervalId = setInterval(robbeh, 5000);
+        }
 
     }
 
@@ -663,37 +659,24 @@
 
         document.getElementById('upTableText').innerHTML = 'Prossimo aggiornamento in <span id="time">05:00</span> minuti.';
 
-        document.getElementById('form_server').innerHTML = '<input id="address_form" type="text" name="address" placeholder="indirizzo IP o DNS">\
-        <input id="port_form" type="text" name="port" placeholder="porta">\
-        <input id="name_form" type="text" name="name" placeholder="nome">\
-        <input id="description_form" type="text" name="description" placeholder="descrizione">\
-        <input type="button" id="btn_id" value="Aggiungi" onclick="add_server()" />'
-
 
         mode = "serverList";
 
         titleFirstTime_flag = true;
 
 
-
         //(Altra) Soluzione birikina (e triste)
-        var evt = document.createEvent("MutationEvents");
-        evt.initMutationEvent("DOMContentLoaded", true, true, document, "", "", "", 0);
-        document.dispatchEvent(evt);
+        //var evt = document.createEvent("MutationEvents");
+        //evt.initMutationEvent("DOMContentLoaded", true, true, document, "", "", "", 0);
+        //document.dispatchEvent(evt);
+        //Soluzione alternativa meno birikina
+        robbeh();
+        if (!intervalId) {
+            console.log("goto_serveList: " + intervalId);
+            intervalId = setInterval(robbeh, 5000);
+        }
 
     }
-
-
-
-
-    function paste() {
-        var pasteText = document.querySelector("#output");
-        pasteText.focus();
-        document.execCommand("paste");
-        console.log(pasteText.textContent);
-    }
-
-    document.querySelector("#paste").addEventListener("click", paste);
 </SCRIPT>
 
 </html>
