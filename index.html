@@ -98,6 +98,43 @@
             animation: invalid 1s 1;
             /* IE 10+ */
         }
+
+
+
+
+
+#wrapper {
+  height: 50px;
+  background-color: cyan; /* for vizualization purposes */
+  text-align: center;
+}
+#yourdiv {
+  background-color: yellow; /* for vizualization purposes */
+  display: inline-block;
+}
+
+
+
+
+
+
+
+#pivot {
+    -moz-appearance: textfield;
+    -webkit-appearance: textfield;
+    background-color: transparent;
+    font: -moz-field;
+    font: -webkit-small-control;
+    margin-top: 5px;
+    padding: 2px 3px;
+    width: 398px;    
+}
+
+
+
+
+
+
     </style>
 </head>
 
@@ -131,9 +168,13 @@
 
 
 
-    <span id="upTableText" style="float: left"></span>
 
+<div id="input" contenteditable>I look like an input</div>
+<div id="wrapper">
+    <span id="upTableText" style="float: left"></span>
+    <div id="yourdiv">Your text</div>
     <span id="replaceButtons" style="float: right"><input type="button" value="Modifica" id="modButton" onclick="modifyMode()"/></span>
+</div>
 
 
     <table id="universalTable">
@@ -159,7 +200,8 @@
     var pivot_coordinate = {
         'x': 0,
         'y': 0,
-        'z': 0
+        'z': 0,
+	'raw': ''
     };
 
     var server;
@@ -179,6 +221,27 @@
         intervalId = setInterval(robbeh, 5000);
     });
 
+
+
+                        var inputBox = document.getElementById('input');
+
+                        inputBox.onkeyup = function() {
+var raw_pivot = inputBox.innerHTML.match(/^GPS:([^:]+):([-]?[0-9.]+):([-]?[0-9.]+):([-]?[0-9.]+):$/);
+                            if (raw_pivot) {
+                                document.getElementById('input').style.backgroundColor = "#d2ff6f";
+pivot_coordinate["x"] = raw_pivot[2];
+pivot_coordinate["y"] = raw_pivot[3];
+pivot_coordinate["z"] = raw_pivot[4];
+pivot_coordinate["raw"] = raw_pivot[0];
+                            } else {
+                                document.getElementById('input').style.backgroundColor = "#ff6f6f";
+                            }
+
+                            if (inputBox.value === "") {
+                                document.getElementById('input').style.backgroundColor = "transparent";
+                            }
+
+                        }
 
 
 
@@ -312,7 +375,7 @@
                         var tr = '<tr>';
                     }
                 }
-                tr += '<td><a href="#" onclick="goto_serverCoords(' + body[i].server_id.toString() + ')">' + body[i].name + '</a></td>' + '<td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body[i].players.toString() + '/' + body[i].maxPlayers.toString() + '</a></td><td><a href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body[i].ping.toString() + 'ms</a></td><td><a id="r' + i + '" href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body[i].address.toString() + ":" + body[i].port.toString() + '</a></td></tr>';
+                tr += '<td><a href="#" onclick="goto_serverCoords(' + body[i].server_id.toString() + ')">' + body[i].name + '</a></td><td><a href="#" onclick="goto_serverCoords(' + body[i].server_id.toString() + ')">' + body[i].players.toString() + '/' + body[i].maxPlayers.toString() + '</a></td><td><a href="#" onclick="goto_serverCoords(' + body[i].server_id.toString() + ')">' + body[i].ping.toString() + 'ms</a></td><td><a id="r' + i + '" href="#" onclick="copyToClipboard(\'r' + i + '\')">' + body[i].address.toString() + ":" + body[i].port.toString() + '</a></td></tr>';
                 tbody += tr;
             }
 
