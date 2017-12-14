@@ -103,15 +103,19 @@
 
 
 
-#wrapper {
-  height: 50px;
-  background-color: cyan; /* for vizualization purposes */
-  text-align: center;
-}
-#yourdiv {
-  background-color: yellow; /* for vizualization purposes */
-  display: inline-block;
-}
+        #wrapper {
+            height: 50px;
+            background-color: cyan;
+            /* for vizualization purposes */
+            display: flex;
+            justify-content: center;
+        }
+
+        #yourdiv {
+            background-color: yellow;
+            /* for vizualization purposes */
+            align-self: center;
+        }
 
 
 
@@ -119,22 +123,17 @@
 
 
 
-#pivot {
-    -moz-appearance: textfield;
-    -webkit-appearance: textfield;
-    background-color: transparent;
-    font: -moz-field;
-    font: -webkit-small-control;
-    margin-top: 5px;
-    padding: 2px 3px;
-    width: 398px;    
-}
+        #pivot {
+            -moz-appearance: textfield;
+            -webkit-appearance: textfield;
+            background-color: transparent;
+            font: -moz-field;
+            font: -webkit-small-control;
+            margin-top: 5px;
+            padding: 2px 3px;
+            text-align: center;
 
-
-
-
-
-
+        }
     </style>
 </head>
 
@@ -159,9 +158,10 @@
 
     <br />
 
-    <form action="#" method="post" id="form_server">
-    </form>
-
+    <div style="height: 70px; position: relative;">
+        <form action="#" style="position:absolute; bottom:0" method="post" id="form_server">
+        </form>
+    </div>
 
     <br />
 
@@ -169,13 +169,15 @@
 
 
 
-<div id="input" contenteditable>I look like an input</div>
-<div id="wrapper">
-    <span id="upTableText" style="float: left"></span>
-    <div id="yourdiv">Your text</div>
-    <span id="replaceButtons" style="float: right"><input type="button" value="Modifica" id="modButton" onclick="modifyMode()"/></span>
-</div>
+    <div id="wrapper">
+        <div id="yourdiv">Your text</div>
+    </div>
 
+    <div id="pivot" onfocus="focus_pivot_div()" onblur="blur_pivot_div()" contenteditable>► Incolla quì le coordinate pivot (di default è l'origine) ◄</div>
+
+
+    <span id="upTableText" style="float: left"></span>
+    <span id="replaceButtons" style="float: right"><input type="button" value="Modifica" id="modButton" onclick="modifyMode()"/></span>
 
     <table id="universalTable">
     </table>
@@ -201,7 +203,7 @@
         'x': 0,
         'y': 0,
         'z': 0,
-	'raw': ''
+        'raw': ''
     };
 
     var server;
@@ -216,33 +218,20 @@
 
     var upTableText_temp = '';
 
+    var focus_blur_pivot_tmp;
+
     document.addEventListener("DOMContentLoaded", function() {
         robbeh();
         intervalId = setInterval(robbeh, 5000);
     });
 
 
-
-                        var inputBox = document.getElementById('input');
-
-                        inputBox.onkeyup = function() {
-var raw_pivot = inputBox.innerHTML.match(/^GPS:([^:]+):([-]?[0-9.]+):([-]?[0-9.]+):([-]?[0-9.]+):$/);
-                            if (raw_pivot) {
-                                document.getElementById('input').style.backgroundColor = "#d2ff6f";
-pivot_coordinate["x"] = raw_pivot[2];
-pivot_coordinate["y"] = raw_pivot[3];
-pivot_coordinate["z"] = raw_pivot[4];
-pivot_coordinate["raw"] = raw_pivot[0];
-                            } else {
-                                document.getElementById('input').style.backgroundColor = "#ff6f6f";
-                            }
-
-                            if (inputBox.value === "") {
-                                document.getElementById('input').style.backgroundColor = "transparent";
-                            }
-
-                        }
-
+    document.getElementById('pivot').onkeyup = function() {
+        var pivot_coords_tmp = validate_rawGps('pivot');
+        if (pivot_coords_tmp) {
+            pivot_coordinate = pivot_coords_tmp;
+        }
+    }
 
 
     function robbeh() {
@@ -283,7 +272,6 @@ pivot_coordinate["raw"] = raw_pivot[0];
         <input id="description_form" type="text" name="description" placeholder="descrizione">\
         <input type="button" id="btn_id" value="Aggiungi" onclick="add_server()" />';
 
-
                         titleFirstTime_flag = false;
                     }
 
@@ -310,22 +298,9 @@ pivot_coordinate["raw"] = raw_pivot[0];
 <input type="button" id="btn_id" value="Aggiungi" onclick="add_coordinates()" />';
                         document.getElementById("categories_form").multiple = true;
 
-
-                        var inputBox = document.getElementById('raw_form');
-
-                        inputBox.onkeyup = function() {
-
-                            if (inputBox.value.match(/^GPS:([^:]+):([-]?[0-9.]+):([-]?[0-9.]+):([-]?[0-9.]+):$/)) {
-                                document.getElementById('raw_form').style.backgroundColor = "#d2ff6f";
-                            } else {
-                                document.getElementById('raw_form').style.backgroundColor = "#ff6f6f";
-                            }
-
-                            if (inputBox.value === "") {
-                                document.getElementById('raw_form').style.backgroundColor = "transparent";
-                            }
-
-                        }
+                        document.getElementById('raw_form').onkeyup = function() {
+                            validate_rawGps('raw_form')
+                        };
 
 
                         titleFirstTime_flag = false;
@@ -335,7 +310,6 @@ pivot_coordinate["raw"] = raw_pivot[0];
                     document.getElementById('title_small_players').innerHTML = " - 12/16 ";
                     document.getElementById('title_small_status').innerHTML = "- Online";
 
-
                     // Build the table
                     build_table(1, coords_obj, "universalTable");
                     coords_obj_old = coords_obj;
@@ -343,10 +317,7 @@ pivot_coordinate["raw"] = raw_pivot[0];
                     //Finish to compile forms and updates them only when necessary
                     build_form(data);
 
-
                 }
-
-
 
             } else {
                 // We reached our target server, but it returned an error
@@ -706,10 +677,7 @@ pivot_coordinate["raw"] = raw_pivot[0];
             mode = "serverList";
         }
 
-        //Soluzione birikina (e triste)
-        //var evt = document.createEvent("MutationEvents");
-        //evt.initMutationEvent("DOMContentLoaded", true, true, document, "", "", "", 0);
-        //document.dispatchEvent(evt);
+
         //Soluzione alternativa meno birikina
         robbeh();
         if (!intervalId) {
@@ -736,10 +704,6 @@ pivot_coordinate["raw"] = raw_pivot[0];
         titleFirstTime_flag = true;
 
 
-        //(Altra) Soluzione birikina (e triste)
-        //var evt = document.createEvent("MutationEvents");
-        //evt.initMutationEvent("DOMContentLoaded", true, true, document, "", "", "", 0);
-        //document.dispatchEvent(evt);
         //Soluzione alternativa meno birikina
         robbeh();
         if (!intervalId) {
@@ -760,11 +724,6 @@ pivot_coordinate["raw"] = raw_pivot[0];
 
         titleFirstTime_flag = true;
 
-
-        //(Altra) Soluzione birikina (e triste)
-        //var evt = document.createEvent("MutationEvents");
-        //evt.initMutationEvent("DOMContentLoaded", true, true, document, "", "", "", 0);
-        //document.dispatchEvent(evt);
         //Soluzione alternativa meno birikina
         robbeh();
         if (!intervalId) {
@@ -814,14 +773,11 @@ pivot_coordinate["raw"] = raw_pivot[0];
             var num = distance * 100;
             return num.toFixed(0) + "cm";
         }
-
     }
 
 
     function categories_toString(cat_array) {
-
         var cat_string = '';
-
         for (var i = 0; i < cat_array.length; i++) {
             if (i === cat_array.length - 1) {
                 cat_string = cat_string + cat_array;
@@ -829,9 +785,52 @@ pivot_coordinate["raw"] = raw_pivot[0];
                 cat_string = cat_string + cat_array + ", ";
             }
         }
-
         return cat_string;
+    }
 
+
+
+
+    function validate_rawGps(element_id) {
+        var element = document.getElementById(element_id);
+        var value;
+        if (element.value === undefined) {
+            value = element.innerHTML;
+        } else {
+            value = element.value;
+        }
+        var raw_pivot = value.match(/^GPS:([^:]+):([-]?[0-9.]+):([-]?[0-9.]+):([-]?[0-9.]+):$/);
+        if (raw_pivot) {
+            document.getElementById(element_id).style.backgroundColor = "#d2ff6f";
+            return {
+                'raw': raw_pivot[0],
+                'name': raw_pivot[1],
+                'x': raw_pivot[2],
+                'y': raw_pivot[3],
+                'z': raw_pivot[4]
+            };
+        } else {
+            document.getElementById(element_id).style.backgroundColor = "#ff6f6f";
+            if (value === "") {
+                document.getElementById(element_id).style.backgroundColor = "transparent";
+            }
+            return false;
+        }
+    }
+
+
+
+    function focus_pivot_div() {
+        var element = document.getElementById('pivot');
+        focus_blur_pivot_tmp = element.innerHTML;
+        element.innerHTML = "";
+    }
+
+    function blur_pivot_div() {
+        var element = document.getElementById('pivot');
+        if (!validate_rawGps('pivot')) {
+            element.innerHTML = focus_blur_pivot_tmp;
+        }
     }
 </SCRIPT>
 
