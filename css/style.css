@@ -1,0 +1,114 @@
+#icon {
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+/*Table*/
+table {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+th {
+    text-align: left;
+    padding: 8px;
+}
+tr:nth-child(even) {
+    background-color: #cce6ff
+}
+tr:hover {
+    background-color: #80c1ff
+}
+th {
+    background-color: #3399ff;
+    color: white;
+}
+td a {
+    display: block;
+    text-decoration: none;
+    color: black;
+    text-align: left;
+    padding: 8px;
+}
+
+
+/*New row animation*/
+@-webkit-keyframes invalid {
+    from {
+        background-color: red;
+    }
+    to {
+        background-color: inherit;
+    }
+}
+@-moz-keyframes invalid {
+    from {
+        background-color: red;
+    }
+    to {
+        background-color: inherit;
+    }
+}
+@-o-keyframes invalid {
+    from {
+        background-color: red;
+    }
+    to {
+        background-color: inherit;
+    }
+}
+@keyframes invalid {
+    from {
+        background-color: red;
+    }
+    to {
+        background-color: inherit;
+    }
+}
+.invalid {
+    -webkit-animation: invalid 1s 1;
+    /* Safari 4+ */
+    
+    -moz-animation: invalid 1s 1;
+    /* Fx 5+ */
+    
+    -o-animation: invalid 1s 1;
+    /* Opera 12+ */
+    
+    animation: invalid 1s 1;
+    /* IE 10+ */
+}
+
+
+/*Alert box*/
+#wrapper {
+    height: 50px;
+    background-color: cyan;
+    /* for vizualization purposes */
+    
+    display: flex;
+    justify-content: center;
+}
+
+#yourdiv {
+    background-color: yellow;
+    /* for vizualization purposes */
+    
+    align-self: center;
+}
+
+
+/*Pivot box*/
+#pivot {
+    -moz-appearance: textfield;
+    -webkit-appearance: textfield;
+    background-color: transparent;
+    font: -moz-field;
+    font: -webkit-small-control;
+    margin-top: 5px;
+    padding: 2px 3px;
+    text-align: center;
+}
